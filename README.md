@@ -19,10 +19,11 @@ Before starting, ensure you have Python 3.8 or higher installed ([Download Pytho
 ### on Linux/Mac run:
 
 
+
 ```
-wget https://gi****************thub.com/BenoitGaston/audio****************-libraries-tlk/archive/refs/heads/master.zip
+wget https://github.com/BenoitGaston/MiniDisc-Labels-App/archive/refs/heads/master.zip
 unzip master.zip
-cd audio-*******libra*******ries-tlk-master
+cd MiniDisc-Labels-App-master
 chmod +x install.sh
 ./install.sh
 ```
@@ -30,9 +31,9 @@ chmod +x install.sh
 ### on Windows run:
 
 ```
-curl https://github**************.com/BenoitGa**************ston/audio-libraries-tlk/archive/refs/heads/master.zip
+curl https://github.com/BenoitGaston/MiniDisc-Labels-App/archive/refs/heads/master.zip
 unzip master.zip
-cd audio-lib********rarie********s-tlk-master
+cd MiniDisc-Labels-App-master
 ./install.bat
 ```
 
@@ -43,7 +44,7 @@ cd audio-lib********rarie********s-tlk-master
 2. Save this playlist using `.m3u8` format with a name that contains the word 'MiniDisc' (`MiniDisc.m3u8`for instance).
 3. Run the command:
 
-In terminal navigate to your `audio-libraries-tlk-master` folder and run:
+In terminal navigate to your `MiniDisc-Labels-App-master` folder and run:
 
 ```
 source .venv/bin/activate
