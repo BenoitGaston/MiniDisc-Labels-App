@@ -1,4 +1,4 @@
-# MiniDisc-Labels-app
+# MiniDisc-Labels-Batch-App
 
 A Streamlit App to create automatically [MiniDisc](https://www.minidisc.wiki/).
 
@@ -21,7 +21,7 @@ Before starting, ensure you have Python 3.8 or higher installed ([Download Pytho
 
 
 ```
-wget https://github.com/BenoitGaston/MiniDisc-Labels-App/archive/refs/heads/master.zip
+wget https://github.com/BenoitGaston/MiniDisc-Labels-Batch-App/archive/refs/heads/master.zip
 unzip master.zip
 cd MiniDisc-Labels-App-master
 chmod +x install.sh
@@ -31,7 +31,7 @@ chmod +x install.sh
 ### on Windows run:
 
 ```
-curl https://github.com/BenoitGaston/MiniDisc-Labels-App/archive/refs/heads/master.zip
+curl https://github.com/BenoitGaston/MiniDisc-Labels-Batch-App/archive/refs/heads/master.zip
 unzip master.zip
 cd MiniDisc-Labels-App-master
 ./install.bat
@@ -44,7 +44,7 @@ cd MiniDisc-Labels-App-master
 2. Save this playlist using `.m3u8` format with a name that contains the word 'MiniDisc' (`MiniDisc.m3u8`for instance).
 3. Run the command:
 
-In terminal navigate to your `MiniDisc-Labels-App-master` folder and run:
+In terminal navigate to your `MiniDisc-Labels-Batch-App-master` folder and run:
 
 ```
 source .venv/bin/activate
@@ -52,7 +52,7 @@ source .venv/bin/activate
 
 Once your virtual env is activated run:
 ```
-streamlit run minidisc_labels_app.py
+streamlit run minidisc_labels_batch_app.py
 ```
 
 If the app doesn't start automatically, open your browser and navigate to [http://localhost:8501](http://localhost:8501).
