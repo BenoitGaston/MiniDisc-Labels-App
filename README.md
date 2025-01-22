@@ -4,7 +4,8 @@ A Streamlit App to create automatically [MiniDisc](https://www.minidisc.wiki/).
 
 ## Acknowledgments
 
-The template used to create MiniDisc inner labels is coming from [MiniDisc Wiki](https://www.minidisc.wiki/resources/labels)
+The template used to create MiniDisc inner labels is coming from [MiniDisc Wiki](https://www.minidisc.wiki/resources/labels).
+
 
 ## Usecases
 
