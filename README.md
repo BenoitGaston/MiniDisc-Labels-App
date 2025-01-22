@@ -24,7 +24,7 @@ Before starting, ensure you have Python 3.8 or higher installed ([Download Pytho
 ```
 wget https://github.com/BenoitGaston/MiniDisc-Labels-Batch-App/archive/refs/heads/master.zip
 unzip master.zip
-cd MiniDisc-Labels-App-master
+cd MiniDisc-Labels-Batch-App-master
 chmod +x install.sh
 ./install.sh
 ```
@@ -34,7 +34,7 @@ chmod +x install.sh
 ```
 curl https://github.com/BenoitGaston/MiniDisc-Labels-Batch-App/archive/refs/heads/master.zip
 unzip master.zip
-cd MiniDisc-Labels-App-master
+cd MiniDisc-Labels-Batch-App-master
 ./install.bat
 ```
 
