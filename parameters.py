@@ -30,7 +30,8 @@ silver = "cccccc"
 
 # background_colors
 color_map = {
-    "black": background_default,
+    "black": black_full,
+    "white": white,
     "sky_blue": sky_blue,
     "blue": blue,
     "blue_steel": blue_steel,
@@ -46,7 +47,7 @@ color_map = {
     "orange": orange,
     "red": red,
     "yellow": yellow,
-    "white": white,
+
     "silver": silver,
 }
 
