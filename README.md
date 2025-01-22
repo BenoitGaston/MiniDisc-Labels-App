@@ -67,11 +67,15 @@ If the app doesn't start automatically, open your browser and navigate to [http:
 ```
 
 ## Apps Screenshots
-***********
+
+<img width="651" alt="AppScreenShot" src="https://github.com/user-attachments/assets/6d69d38c-2ee6-4a7e-870a-dbdaf7e62dad" />
+
 ## Labels examples
+
+![Printed-MiniDisc-Labels-1](https://github.com/user-attachments/assets/3f5ca080-ac24-4612-a84d-590eeacfc8da)
+![Printed-MiniDisc-Labels-2](https://github.com/user-attachments/assets/fba08ad5-a7d4-488a-8c95-430e6f565a05)
 ![MD-inner-labels-examples](https://github.com/user-attachments/assets/c8d5cb68-64e5-4982-bd96-3b54931a0c7e)
 ![MD-outer-labels-examples](https://github.com/user-attachments/assets/87745c31-d388-499f-9304-5c387af9c975)
-
 ![MD-inner-labels-examples](https://github.com/user-attachments/assets/c8d5cb68-64e5-4982-bd96-3b54931a0c7e)
 
 
