@@ -66,7 +66,7 @@ If the app doesn't start automatically, open your browser and navigate to [http:
 'white','silver'
 ```
 
-## Apps Screenshots
+## Apps Screenshot
 
 <img width="651" alt="AppScreenShot" src="https://github.com/user-attachments/assets/6d69d38c-2ee6-4a7e-870a-dbdaf7e62dad" />
 
