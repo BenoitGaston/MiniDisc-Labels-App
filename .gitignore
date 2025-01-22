@@ -212,3 +212,5 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+/.temp_md_labels_files

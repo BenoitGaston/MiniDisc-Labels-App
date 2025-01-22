@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-
+import re
 from audio_libs_tlk.convertion_functions import m3u8_to_csv
 from audio_libs_tlk.folder_lib_scan import loop_over_a_songs_df
 from audio_libs_tlk.folder_lib_scan import format_df_to_iTunes_csv_format
@@ -10,9 +10,9 @@ from audio_libs_tlk.edit_cover_artwork import EditCoverArtwork
 from pathlib import Path
 import shutil
 import base64
-import numpy as np
-from .parameters import color_map,background_default,color_map,text_default
-from .edit_cover_artwork import get_image_files_paths
+
+from parameters import color_map
+from audio_libs_tlk.edit_cover_artwork import get_image_files_paths
 
 import re
 
@@ -171,17 +171,21 @@ def is_valid_hexa_code(string):
     return bool(re.match(hexa_code, string))
 
 
-def get_theme(row):
+def get_theme(row,
+              background_color,
+              text_color):
 
     theme = {}
 
     for theme_item in ["background_color", "md_logo_background_color"]:
+        
         if is_valid_hexa_code(str(row["background_color"])):
             theme[theme_item] = row["background_color"]
         else:
             theme[theme_item] = color_map.get(
-                row["background_color"], background_default
+                row["background_color"], color_map.get(background_color,background_color)
             )
+     
 
     for theme_item in [
         "main_text_color",
@@ -189,17 +193,17 @@ def get_theme(row):
         "triangle_color",
         "insert_color",
     ]:
+        
         if is_valid_hexa_code(str(row["text_color"])):
             theme[theme_item] = row["text_color"]
         else:
             theme[theme_item] = color_map.get(
-                row["text_color"], text_default
+                row["text_color"], color_map.get(text_color,text_color)
             )
-
     return theme
 
 
-def create_substitucion_dict(one_page_md_labels_df, image_dict):
+def create_substitucion_dict(one_page_md_labels_df, image_dict,background_color ,text_color):
 
     one_page_md_labels_df.reset_index(inplace=True)
 
@@ -207,7 +211,7 @@ def create_substitucion_dict(one_page_md_labels_df, image_dict):
 
     for df_md_id, row in one_page_md_labels_df.iterrows():
         md_id = df_md_id+1
-        theme = get_theme(row)
+        theme = get_theme(row,background_color ,text_color)
         dict_of_styles = built_dict_of_styles(theme)
 
         substitution_dict = (
@@ -284,9 +288,7 @@ class MiniDiscCovers:
     ):
         self.path_to_music_folder = Path(path_to_music_folder)
 
-        if "MiniDisc-Labels" not in os.listdir(self.path_to_music_folder):
-            os.mkdir(Path(self.path_to_music_folder) / "MiniDisc-Labels")
-        self.path_to_dest_folder = (self.path_to_music_folder) / "MiniDisc-Labels"
+        self.path_to_dest_folder = (self.path_to_music_folder) 
 
     def create_mini_disc_df(self):
 
@@ -294,7 +296,7 @@ class MiniDiscCovers:
             file
             for file in os.listdir(self.path_to_music_folder)
             if "minidisc"
-            in file.lower().replace(" ", "").replace("_", "").replace("-", "")
+            in file.lower()
             and file.endswith(".m3u8")
         ]
 
@@ -307,12 +309,12 @@ class MiniDiscCovers:
 
         mini_disc_playlist = mini_disc_playlists[0]
 
-        if f"{mini_disc_playlist.replace('.m3u8','')}_songs.csv" in os.listdir(
+        if f"MiniDisc_songs.csv" in os.listdir(
             self.path_to_music_folder
         ):
             mini_disc_songs_df = pd.read_csv(
                 self.path_to_music_folder
-                / f"{mini_disc_playlist.replace('.m3u8','')}_songs.csv"
+                / f"MiniDisc_songs.csv"
             )
         else:
 
@@ -323,20 +325,36 @@ class MiniDiscCovers:
             os.remove(
                 self.path_to_music_folder / mini_disc_playlist.replace("m3u8", "csv")
             )
+            try:
+                mini_disc_songs_df = loop_over_a_songs_df(mini_disc_songs_df)
+                mini_disc_songs_df = format_df_to_iTunes_csv_format(mini_disc_songs_df)
+            except:
+                mini_disc_songs_df.loc[:,'Album'] = mini_disc_songs_df.loc[:,'Album Location'].apply(lambda x: x.name)
+                mini_disc_songs_df.loc[:,'Track Number'] = 0
+                mini_disc_songs_df.loc[:,'Size'] = 0
+                mini_disc_songs_df.loc[:,'Bit Rate'] = 0
+                mini_disc_songs_df.loc[:,"Total Time"] = 0
+                mini_disc_songs_df.loc[:,'Kind'] = 'Song'
+                mini_disc_songs_df.loc[:,'Year'] = 0
 
-            mini_disc_songs_df = loop_over_a_songs_df(mini_disc_songs_df)
-            mini_disc_songs_df = format_df_to_iTunes_csv_format(mini_disc_songs_df)
+                def group_function(x):
+                    return pd.Series({'Album Artist' :  x["Artist"].mode()[0]})
+                
+                grouped_df = mini_disc_songs_df[['Album','Artist']].groupby(['Album']).apply(group_function).reset_index()
+
+                mini_disc_songs_df = mini_disc_songs_df.merge(grouped_df, on='Album', how='left')
+
             mini_disc_songs_df.to_csv(
                 self.path_to_music_folder
-                / f"{mini_disc_playlist.replace('.m3u8','')}_songs.csv"
+                / f"MiniDisc_songs.csv"
             )
 
-        if f"{mini_disc_playlist.replace('.m3u8','')}_albums.csv" in os.listdir(
+        if f"MiniDisc-Labels.csv" in os.listdir(
             self.path_to_music_folder
         ):
             mini_disc_album_df = pd.read_csv(
                 self.path_to_music_folder
-                / f"{mini_disc_playlist.replace('.m3u8','')}_albums.csv"
+                / f"MiniDisc-Labels.csv"
             )
         else:
 
@@ -348,11 +366,12 @@ class MiniDiscCovers:
             mini_disc_album_df = library_processing.get_grouped_df(
                 disc_or_album="Album", path_to_destination=self.path_to_dest_folder
             )
+        
             os.remove(self.path_to_dest_folder / "Album.csv")
             mini_disc_album_df.loc[:, ["Album", "Album Artist"]] = (
                 mini_disc_album_df.loc[:, ["Album", "Album Artist"]]
-                .replace("/", "-", regex=True)
-                .replace(":", "-", regex=True)
+                .replace("/", "_", regex=True)
+                .replace(":", "_", regex=True)
             )
 
             mini_disc_album_df.loc[:, "Display Album"] = mini_disc_album_df.loc[
@@ -427,12 +446,13 @@ class MiniDiscCovers:
             mini_disc_album_df.dropna(subset="Album Location", inplace=True)
             mini_disc_album_df.to_csv(
                 self.path_to_music_folder
-                / f"{mini_disc_playlist.replace('.m3u8','')}_albums.csv"
+                / "MiniDisc-Labels.csv"
             )
 
         return mini_disc_album_df, mini_disc_songs_df
 
     def copy_covers_to_dest_path(self):
+        
 
         for _, row in self.mini_disc_album_df.iterrows():
 
@@ -440,6 +460,9 @@ class MiniDiscCovers:
 
             album_location = row["Album Location"]
             album_artist = row["Album Artist"]
+
+            if not Path(album_location).is_dir():
+                continue
 
             images_files = get_image_files_paths(Path(album_location))
 
@@ -476,6 +499,7 @@ class MiniDiscCovers:
 
             if len(cover_files) == 0:
                 logging.warning(f"Cover artwork is missing for album {album_title}")
+                
             else:
                 cover_file = cover_files[0]
 
@@ -507,23 +531,30 @@ class MiniDiscCovers:
 
     def get_converted_images_dict(self):
 
-        image_dict = {}
+        
 
+        image_dict = {}
+        def remove_special_characters(my_string):
+            return re.sub(r"[^a-zA-Z0-9]+", "", my_string).lower()
+        
         for _, row in self.mini_disc_album_df.iterrows():
             album = row["Album"]
             artist = row["Album Artist"]
 
             images_files = get_image_files_paths(self.path_to_dest_folder)
 
-            cover_file_1 = [
-                f for f in images_files if (f.name.startswith(f"{artist}-{album}."))
-            ]
+            cover_file_1 = ([f for f in images_files if remove_special_characters(f.name).startswith(remove_special_characters(f"{artist}{album}."))]+
+                            [f for f in images_files if remove_special_characters(f.name).startswith(remove_special_characters(f"cover_{album}."))]+
+                            [f for f in images_files if remove_special_characters(f.name).startswith(remove_special_characters(f"cover_{artist}-{album}."))]+
+                            [f for f in images_files if remove_special_characters(f.name).startswith(remove_special_characters(f"cover_{album}-{artist}."))]
+                            )
 
             if len(cover_file_1) == 0:
                 logging.warning(
                     f" ! Warning no cover file found for {artist}-{album} !"
                 )
-                break
+                self.missing_covers.append((album, artist))
+                continue
 
             cover_file_1 = cover_file_1[0]
 
@@ -533,7 +564,7 @@ class MiniDiscCovers:
 
         return image_dict
 
-    def build_album_labels(self, double=False):
+    def build_album_labels(self, background_color ,text_color,double=False):
 
         # Strings to replace Inner (16)
         list_num_pages = [16, 32, 8]
@@ -590,7 +621,7 @@ class MiniDiscCovers:
                 )
 
                 substitution_dict = create_substitucion_dict(
-                    one_page_md_labels_df, self.image_dict
+                    one_page_md_labels_df, self.image_dict,background_color ,text_color
                 )
 
                 open(self.path_to_dest_folder / "temp-1.svg", "w").write(
@@ -616,7 +647,10 @@ class MiniDiscCovers:
 
         return None
 
-    def build_md_labels(self):
+    def build_md_labels(self,
+                        background_color,
+                        text_color):
+        self.missing_covers = []
         self.mini_disc_album_df, self.mini_disc_songs_df = self.create_mini_disc_df()
 
         self.copy_covers_to_dest_path()
@@ -630,4 +664,4 @@ class MiniDiscCovers:
 
         self.image_dict = self.get_converted_images_dict()
 
-        self.build_album_labels()
+        self.build_album_labels(background_color ,text_color)
