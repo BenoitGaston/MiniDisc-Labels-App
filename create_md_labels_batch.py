@@ -223,7 +223,7 @@ def create_substitucion_dict(one_page_md_labels_df, image_dict,background_color 
 
             }
         )
-        if str(row["Album Year"]) == "nan":
+        if str(row["Album Year"]) == "nan" or str(row["Album Year"]) == "0":
             substitution_dict = substitution_dict | {
                 f">i_year_{md_id}<": f"> <",
                 f">o_album_{md_id}-year_{md_id}<": f">{row['Display Album']}<",
