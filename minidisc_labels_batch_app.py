@@ -11,12 +11,15 @@ import parameters as params
 import zipfile
 import io
 import pandas as pd
+import socket
 
 UPLOAD_DIR = ".temp_md_labels_files"
 
 def is_running_on_streamlit_cloud():
-    # Check for environment variables specific to Streamlit Cloud
-    return "STREAMLIT_APP_URL" in os.environ
+    hostname = socket.gethostname()
+    # Add logic to detect local vs. cloud hostnames
+    # Example: Assume local hostname contains "local" or is set up specifically
+    return not ("local" in hostname or hostname.startswith("your-local-hostname-prefix"))
 
 def init_app():
     if "background_color" not in st.session_state:
