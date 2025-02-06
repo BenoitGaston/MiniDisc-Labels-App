@@ -11,15 +11,19 @@ import parameters as params
 import zipfile
 import io
 import pandas as pd
-import socket
+
 
 UPLOAD_DIR = ".temp_md_labels_files"
 
 def is_running_on_streamlit_cloud():
-    hostname = socket.gethostname()
-    # Add logic to detect local vs. cloud hostnames
-    # Example: Assume local hostname contains "local" or is set up specifically
-    return not ("local" in hostname or hostname.startswith("your-local-hostname-prefix"))
+    # Check if "is_cloud" exists in secrets and is set to true
+    running_on_cloud = st.secrets.get("general", {}).get("is_cloud", False)
+
+    if running_on_cloud:
+        pass
+    else:
+        st.warning("running on local")
+    return running_on_cloud
 
 def init_app():
     if "background_color" not in st.session_state:
