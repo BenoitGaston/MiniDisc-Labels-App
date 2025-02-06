@@ -191,7 +191,7 @@ def album_covers_upload():
     if album_cover_selection == 'Upload album cover art image files':
         st.write(f"To be used for the MiniDisc labels you cover files need to be named as:")
         st.write("`title_album`  or `title_album + artist` or  `title_album + artist` seperated by any special character.")
-        st.write("and to be have one of the following extensions: `.jpg, .jpeg, .png`")
+        st.write("and to  have one of the following extensions: `.jpg, .jpeg, .png`.")
         st.write("""Note that `artist`or `title_album` containing the characters `/`or `_` or `-` 
                  might not be found by the app or in the worst case cause some crashes.""")
 
